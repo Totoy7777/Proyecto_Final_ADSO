@@ -1,0 +1,63 @@
+/* CSS LOGIN */
+
+/* Fondo principal */
+.gradient-form {
+  background: #f8f9fa;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Gradiente */
+.gradient-custom-2 {
+  background: #4C6560;
+}
+
+/* Botón degradado */
+.gradient-btn {
+  background:  #697A75;
+  border: none;
+  transition: 0.3s;
+}
+
+.gradient-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  background-color: #000000;
+  color: black;
+}
+
+/* Tarjeta */
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Inputs */
+.form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.form-control:focus {
+  border-color: #000000;
+  box-shadow: 0 0 6px rgba(8, 5, 6, 0.4);
+}
+
+
+/* Botón crear cuenta */
+.btn-crear {
+  color: white;
+  border-color: #949494;
+  background: #4C6560;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out; /* transición suave */
+}
+
+.btn-crear:hover {
+  background: #4C6560;
+  color: #fff;
+  transform: scale(1.09); /* hace que el botón crezca un poco */
+}
