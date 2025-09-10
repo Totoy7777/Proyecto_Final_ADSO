@@ -1,0 +1,108 @@
+.menu-container {
+  background-color: #fff;
+  padding: 0.8rem 2rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  margin: 0 auto;
+  border: none;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.menu li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.menu a:hover {
+  color: #007bff;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.right-icons2 {
+  margin-left: auto; /* empuja los íconos de búsqueda y perfil a la derecha */
+}
+
+
+
+/*
+  Estilo para el contenedor de la barra de búsqueda.
+  Le damos un poco de espacio y lo alineamos.
+*/
+
+/* Contenedor del buscador */
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d2d2d7; /* Borde del contenedor */
+    background-color: #f0f0f5; /* Fondo del contenedor */
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    flex-grow: 1; /* Permite que el contenedor crezca */
+    margin-left: auto; /* Lo empuja a la derecha */
+    margin-right: 20px;
+}
+
+/* Campo de entrada de texto */
+.search-input {
+    background-color: transparent;
+    border: none;
+    color: #1d1d1f;
+    padding: 5px;
+    outline: none;
+    font-size: 1em;
+    flex-grow: 1; /* Permite que el input ocupe todo el espacio disponible */
+   
+}
+
+/* Estilo para el placeholder (el texto de ayuda) */
+.search-input::placeholder {
+    color: #8e8e93;
+}
+
+/* Botón de la 'X' para cerrar */
+.search-close-btn {
+    background-color: transparent;
+    border: none;
+    color: #a80909;
+    cursor: pointer;
+    font-size: 1.2em; /* Tamaño de la 'X' */
+    padding: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.search-close-btn:hover {
+    color: #960625;
+}
+/*
+  Si quieres que el ícono de la lupa se vea igual al de tu ejemplo,
+  puedes usar esta regla.
+*/
+.menu .right-icons1 .icon {
+    font-size: 2em; /* Aumenta el tamaño del ícono de la lupa */
+    color: #6e6e73;
+}

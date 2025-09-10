@@ -1,0 +1,73 @@
+/* src/components/CardSlider.css */
+
+.slider-container {
+  width: 100%;
+  padding: 40px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.slider-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1d1d1f;
+}
+
+/* Estilo para cada tarjeta dentro del slide */
+.slide-card {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  padding: 25px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
+  cursor: grab;
+}
+
+.slide-card:hover {
+  transform: scale(1.02);
+}
+
+.slide-content {
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+}
+
+.slide-category {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.slide-card h3 {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* --- ESTILOS PARA LOS PUNTITOS DE SWIPER --- */
+
+/* Contenedor de la paginación */
+.mySwiper .swiper-pagination {
+  position: static; /* Lo sacamos de su posición absoluta por defecto */
+  margin-top: 25px; /* Le damos espacio arriba */
+}
+
+/* Estilo para cada puntito */
+.mySwiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background-color: #d2d2d7;
+  opacity: 1;
+}
+
+/* Estilo para el puntito ACTIVO (el de la slide actual) */
+.mySwiper .swiper-pagination-bullet-active {
+  background-color: #6e6e73;
+}

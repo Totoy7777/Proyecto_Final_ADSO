@@ -1,0 +1,38 @@
+/* Estilo del submenú */
+.submenu {
+ display: none; /* Oculta el submenú por defecto */
+ position: absolute; /* Posiciona el submenú con respecto al elemento padre */
+ top: 100%; /* Lo coloca debajo del elemento padre */
+ left: 0;
+ background-color: #f7f4f4; /* Fondo para el submenú */
+ list-style: none;
+ padding: 0;
+ margin: 0;
+ min-width: 200px; /* Ancho mínimo para que se vea bien */
+ z-index: 100; /* Asegura que el submenú esté por encima de otros elementos */
+ border-radius: 5px;
+ color: black;
+
+}
+
+/* Muestra el submenú al pasar el mouse sobre la categoría principal */
+.has-submenu:hover > .submenu {
+ display: block;
+}
+
+/* Estilos para los enlaces del submenú */
+.submenu li a {
+ display: flex;
+ padding: 10px 15px;
+ color: rgb(0, 0, 0);
+ text-decoration: none;
+ transition: background-color 0.3s ease;
+ width: 100%;
+ align-content: center;
+ border-radius: 5px;
+}
+
+.submenu li a:hover {
+ background-color: #dbd5d5; /* Cambio de color al pasar el mouse */
+ border-radius: 5px;
+}
