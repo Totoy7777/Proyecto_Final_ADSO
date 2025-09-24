@@ -79,7 +79,7 @@ const Registro = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/registro", {
+      const response = await fetch("http://localhost:8080/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,19 +87,19 @@ const Registro = () => {
         // 4. AÑADIMOS LOS NUEVOS CAMPOS AL CUERPO DE LA PETICIÓN
         body: JSON.stringify({
           nombre,
+          email: correo,
+          passwordHash: pass,
+          direccion,
+          telefono,
           tipoDoc,
           numeroDoc,
-          telefono,  // NUEVO CAMPO
-          correo,    // NUEVO CAMPO
-          direccion, // NUEVO CAMPO
-          password: pass,
         }),
       });
 
       if (response.ok) {
         const data = await response.text();
         alert("✅ " + data);
-        navegacion("/Login");
+        navegacion("/login");
       } else {
         alert("Error en el registro.")
       }

@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
 import Registro from "./InterfazUsuario/Registro";
+import React, { useState } from "react";
+
 import Login from "./InterfazUsuario/Login";
 import "./Css/Registro.css"; // importa tus estilos
 

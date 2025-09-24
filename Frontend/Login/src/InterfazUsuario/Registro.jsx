@@ -1,25 +1,23 @@
+import axios from "axios";
 import React, { useState } from "react";
-import "../Css/Registro.css";
-import logo from "../assets/logo.png"
-import "bootstrap/dist/css/bootstrap.min.css"; // aseguramos importar bootstrap
 import { useNavigate } from "react-router-dom";
 
 const Registro = () => {
   const navegacion = useNavigate();
 
-  const irLogin = () => {
-    navegacion("/Login");
-  };
-
   const [formData, setFormData] = useState({
     nombre: "",
-    tipoDoc: "",
-    numeroDoc: "",
+    email: "",
     pass: "",
     confirmPass: "",
   });
 
-  const [error,setError]=useState("");
+  const irLogin = () => {
+  navegacion("/login");
+};
+
+
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -29,62 +27,42 @@ const Registro = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const { nombre, tipoDoc, numeroDoc, pass, confirmPass } = formData;
+  const { nombre, email, pass, confirmPass } = formData;
 
-    if (!nombre || !tipoDoc || !numeroDoc || !pass || !confirmPass) {
-      setError("⚠️ Todos los campos son obligatorios.");
-      return;
-    }
+  if (!nombre || !email || !pass || !confirmPass) {
+    setError("⚠️ Todos los campos son obligatorios.");
+    return;
+  }
 
-    // ✅ Validar que el número de documento solo tenga números
-    if (!/^\d+$/.test(numeroDoc)) {
-      setError("❌ El número de documento solo debe contener números.");
-      return;
-    }
+  if (pass !== confirmPass) {
+    setError("❌ Las contraseñas no coinciden.");
+    return;
+  }
 
-     // ✅ Validar contraseña con regex
-    const regexPass = /^(?=.*[A-Z])(?=.*[$%&/_-]).{6,}$/;
-    if (!regexPass.test(pass)) {
-      setError(
-        "❌ La contraseña debe tener mínimo 6 caracteres, al menos una mayúscula y un símbolo"
-      );
-      return;
-    }
-
-    if (pass !== confirmPass) {
-      setError("❌ Las contraseñas no coinciden.");
-      return;
-    }
-    try{
-      const response = await fetch("http://localhost:8080/api/registro",{
-        method:"POST",
-        headers:{
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre,tipoDoc,numeroDoc,password:pass,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.text();
-        alert("✅ "+data);
-        navegacion("/Login");
-      }else{
-        alert("Error en el registro.")
-      }
-    } catch(error){
-      console.error("Error: ",error);
-      setError(" No se pudo conectar con el servido.");
-    }
+  try {
+    const response = await axios.post("http://localhost:8080/api/users/register", {
+      nombre: formData.nombre,
+      email: formData.email,
+      passwordHash: formData.pass, // 👈 igual que en tu entidad User
+      direccion: "",               // opcional
+      telefono: ""                 // opcional
+    });
 
     alert("✅ Registro exitoso");
-  };
+    console.log(response.data);
+    navegacion("/login");
+  } catch (err) {
+    console.error(err);
+    setError("❌ Error al registrar usuario.");
+  }
+};
+
 
   return (
+    
     <section className="h-100 gradient-form">
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
@@ -101,12 +79,10 @@ const Registro = () => {
                         alt="logo"
                         className="mb-3"
                       />
-                      <h4 className="fw-bold"></h4>
                     </div>
 
-                    {/* Aquí el form con handleSubmit */}
                     <form onSubmit={handleSubmit}>
-                      <p className="text-muted">Completa Para Registrarte</p>
+                      <p className="text-muted">Completa para registrarte</p>
 
                       {/* Nombre */}
                       <div className="form-outline mb-4">
@@ -124,40 +100,18 @@ const Registro = () => {
                         />
                       </div>
 
-                      {/* Tipo de Documento */}
+                      {/* Email */}
                       <div className="form-outline mb-4">
-                        <label className="form-label" htmlFor="tipoDoc">
-                          Tipo Documento
-                        </label>
-                        <select
-                          id="tipoDoc"
-                          value={formData.tipoDoc}
-                          onChange={handleChange}
-                          className="form-control form-control-lg"
-                          required
-                        >
-                          <option value="">
-                            Selecciona Tu Tipo De Documento
-                          </option>
-                          <option value="ti">Tarjeta de Identidad</option>
-                          <option value="cc">Cédula de Ciudadanía</option>
-                          <option value="ce">Cédula de Extranjería</option>
-                          <option value="pp">Pasaporte</option>
-                        </select>
-                      </div>
-
-                      {/* Documento */}
-                      <div className="form-outline mb-4">
-                        <label className="form-label" htmlFor="numeroDoc">
-                          Numero Documento
+                        <label className="form-label" htmlFor="email">
+                          Correo electrónico
                         </label>
                         <input
-                          type="text"
-                          id="numeroDoc"
-                          value={formData.numeroDoc}
+                          type="email"
+                          id="email"
+                          value={formData.email}
                           onChange={handleChange}
                           className="form-control form-control-lg"
-                          placeholder="Ingresa Tu Numero De Documento"
+                          placeholder="ejemplo@mail.com"
                           required
                         />
                       </div>
@@ -173,7 +127,7 @@ const Registro = () => {
                           value={formData.pass}
                           onChange={handleChange}
                           className="form-control form-control-lg"
-                          placeholder="Ingresa Contraseña"
+                          placeholder="Ingresa contraseña"
                           required
                         />
                       </div>
@@ -181,7 +135,7 @@ const Registro = () => {
                       {/* Confirmar Contraseña */}
                       <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="confirmPass">
-                          Confirma Contraseña
+                          Confirmar Contraseña
                         </label>
                         <input
                           type="password"
@@ -189,11 +143,12 @@ const Registro = () => {
                           value={formData.confirmPass}
                           onChange={handleChange}
                           className="form-control form-control-lg"
-                          placeholder="Confirma Contraseña"
+                          placeholder="Confirma tu contraseña"
                           required
                         />
                       </div>
-                       {/* Mensaje de error */}
+
+                      {/* Mensaje de error */}
                       {error && (
                         <div className="alert alert-danger py-2">{error}</div>
                       )}
@@ -209,7 +164,7 @@ const Registro = () => {
                       </div>
 
                       <div className="d-flex align-items-center justify-content-center">
-                        <p className="mb-0 me-2">Ya tienes una Cuenta?</p>
+                        <p className="mb-0 me-2">¿Ya tienes una cuenta?</p>
                         <button
                           onClick={irLogin}
                           type="button"
@@ -225,13 +180,11 @@ const Registro = () => {
                 {/* Columna derecha */}
                 <div className="col-lg-6 d-flex align-items-center gradient-custom-2 text-white">
                   <div className="px-4 py-5 mx-md-4">
-                    <h4 className="fw-bold mb-4">Acerca De Nuestra Compañia</h4>
+                    <h4 className="fw-bold mb-4">Acerca de nuestra compañía</h4>
                     <p className="small">
-                      En nuestra compañia el criterio mas importante es la
-                      felicidad de nuestros apreciados usuarios y clientes, por
-                      tal motivo nos esforzamos al maximo para lograr que estos
-                      tengan una buena experiencia con nosotros y se vayan
-                      felices a sus hogares.
+                      En nuestra compañía, lo más importante es la felicidad de
+                      nuestros usuarios. Nos esforzamos al máximo para que tengan
+                      una buena experiencia y se vayan felices.
                     </p>
                   </div>
                 </div>
