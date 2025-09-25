@@ -13,11 +13,16 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*") // permite cualquier origen
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // incluye OPTIONS
-                        .allowedHeaders("*") // permite cualquier header
-                        .allowCredentials(false);
+                registry.addMapping("/api/**")
+                        // allow known dev hosts plus rotating ngrok tunnels
+                        .allowedOriginPatterns(
+                                "http://localhost:5173",
+                                "http://10.4.237.125:5173",
+                                "https://*.ngrok-free.dev"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }

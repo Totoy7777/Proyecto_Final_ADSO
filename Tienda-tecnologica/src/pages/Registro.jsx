@@ -80,7 +80,7 @@ const Registro = () => {
     }
 
     try {
-      const response = await fetch("https://unamazedly-demure-veola.ngrok-free.dev/api/users/register", {
+      const response = await fetch("https://gratulant-nonsignable-karol.ngrok-free.dev/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,25 +1,27 @@
-package com.proyecto_final.tienda_adso.config;
+﻿package com.proyecto_final.tienda_adso.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.*;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-    
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())       // si usas JWT desactiva CSRF
-            .cors(Customizer.withDefaults())    // habilita CORS usando el bean de abajo
+            .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/actuator/**").permitAll()
-                .anyRequest().permitAll()       // cambia a authenticated() si tienes seguridad
+                .requestMatchers("/api/auth/**", "/api/users/**", "/actuator/**").permitAll()
+                .anyRequest().permitAll()
             );
         return http.build();
     }
@@ -27,13 +29,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-            "http://localhost:5173",  // Vite
-            "http://localhost:3000"   // CRA
+        config.setAllowedOriginPatterns(List.of(
+            "http://localhost:5173",
+            "http://10.4.237.125:5173",
+            "https://*.ngrok-free.dev"
         ));
-        config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With"));
-        config.setAllowCredentials(true); // true si usarás cookies/sesiones
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.addAllowedHeader("*"); // allow custom headers such as ngrok-skip-browser-warning
+        config.setAllowCredentials(true); // enable credentials if the client sends cookies/tokens
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
