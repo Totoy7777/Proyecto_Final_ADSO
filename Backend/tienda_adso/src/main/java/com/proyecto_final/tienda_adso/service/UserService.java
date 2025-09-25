@@ -20,7 +20,16 @@ public class UserService {
     public void delete(int id) { userRepository.deleteById(id); }
 
     public Optional<User> login(String email, String password) {
-        return userRepository.findByEmail(email)
-                .filter(u -> u.getPasswordHash().equals(password));
+        // 📝 defensivo: quita espacios y normaliza email a lower-case
+        String e = email == null ? null : email.trim().toLowerCase();
+        String p = password == null ? null : password; // no trim del pass
+
+        Optional<User> ou = userRepository.findByEmail(e);
+
+        // 🔎 log temporal para depurar (borra luego)
+        ou.ifPresent(u -> System.out.println(
+            "DBG login: email=[" + e + "] dbPwd=[" + u.getPasswordHash() + "] inPwd=[" + p + "] equals=" + u.getPasswordHash().equals(p)));
+
+        return ou.filter(u -> u.getPasswordHash().equals(p));
     }
 }

@@ -1,0 +1,256 @@
+/* ProductDetail.css */
+.product-detail-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.top-section {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 40px;
+}
+
+/* --- Galería de Imágenes (Izquierda) --- */
+/* ProductDetail.css - REEMPLAZA ESTA PARTE */
+
+/* --- Galería de Imagen Única (Izquierda) --- */
+.image-gallery-single {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+}
+
+.main-image-single img {
+  max-width: 100%;
+  max-height: 450px;
+  object-fit: contain;
+}
+
+.thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.thumbnails img:hover,
+.thumbnails img.active {
+  border-color: #0071e3;
+}
+
+.main-image {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-image img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* --- Información del Producto (Derecha) --- */
+.product-info {
+  flex: 1; /* Ocupa 1 parte del espacio */
+  display: flex;
+  flex-direction: column;
+}
+
+.product-info h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.product-code {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #f90;
+  margin-bottom: 20px;
+}
+.rating span {
+  color: #555;
+  font-size: 14px;
+}
+
+.price-section {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 16px;
+  margin: 0;
+}
+
+.final-price {
+  font-size: 32px;
+  font-weight: 700;
+  color: #d00;
+  margin: 5px 0;
+}
+
+.discount-tag {
+  background-color: #d00;
+  color: white;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.installments {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.color-selector {
+  margin-bottom: 20px;
+}
+.colors {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+.colors span {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #eee;
+  transition: border-color 0.3s;
+}
+.colors span.selected {
+  border-color: #0071e3;
+}
+
+.shipping-options {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.shipping-options .option {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  flex: 1;
+  text-align: center;
+}
+.shipping-options .icon {
+  font-size: 24px;
+  color: #0071e3;
+  margin-bottom: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quantity-selector select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.add-to-cart-btn {
+  flex-grow: 1;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #218838;
+}
+
+.extra-actions {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.extra-actions a {
+  color: #0071e3;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.store-availability a {
+  color: #0071e3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* --- Sección Inferior --- */
+.bottom-section {
+  display: flex;
+  gap: 40px;
+  padding-top: 40px;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+.description-column {
+  flex: 1;
+}
+
+.description-column h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.description-column ul {
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.description-column li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* --- Responsividad para celulares --- */
+@media (max-width: 768px) {
+  .top-section, .bottom-section {
+    flex-direction: column;
+  }
+}

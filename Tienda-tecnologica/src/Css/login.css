@@ -1,0 +1,70 @@
+/* CSS LOGIN */
+
+/* Fondo principal */
+.gradient-form {
+  padding-top: 40px;
+  background: #f8f9fa;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Gradiente */
+.gradient-custom-2 {
+  background: #007bff;
+}
+
+/* Botón degradado */
+.gradient-btn {
+  background:  #697A75;
+  border: none;
+  transition: 0.3s;
+}
+
+.gradient-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  background-color: #000000;
+  color: black;
+}
+
+/* Tarjeta */
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Inputs */
+.form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.form-control:focus {
+  border-color: #000000;
+  box-shadow: 0 0 6px rgba(8, 5, 6, 0.4);
+}
+
+
+/* Botón crear cuenta */
+.btn-crear {
+  /* Estilo base */
+  color: white;
+  background: #007bff;
+  border: 1px solid #f8f8f8; /* Agregamos un estilo de borde */
+  border-radius: 4px;
+  padding: 5px 10px; /* Tamaño del botón */
+  font-weight: 500;
+  cursor: pointer; /* Cambiamos el cursor a una mano */
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-crear:hover {
+  /* Estilo al pasar el mouse */
+  background: #0067d4;
+  color: #fff;
+  transform: scale(1.09);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agregamos un efecto de sombra */
+}

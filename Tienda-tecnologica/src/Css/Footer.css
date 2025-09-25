@@ -1,0 +1,124 @@
+/* src/components/Footer.css */
+
+.site-footer {
+  background-color: #f5f5f7;
+  padding: 20px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  color: #6e6e73;
+}
+
+.footer-content {
+  max-width: 980px; /* Ancho máximo como en la web de Apple */
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+.footer-notes {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #d2d2d7;
+}
+
+.footer-notes p {
+  margin: 0 0 10px;
+}
+
+.footer-links-container {
+  padding: 20px 0;
+  display: grid;
+  /* La magia para las columnas responsivas: */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.footer-column h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f; /* Texto más oscuro para los títulos */
+  margin-bottom: 12px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 10px;
+}
+
+.footer-column a {
+  color: #6e6e73;
+  text-decoration: none;
+}
+
+.footer-column a:hover {
+  text-decoration: underline;
+}
+
+.footer-more-ways {
+  padding: 20px 0;
+  border-bottom: 1px solid #d2d2d7;
+}
+
+.footer-more-ways a {
+  color: #06c;
+}
+
+.footer-bottom-bar {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Permite que los elementos se muevan hacia abajo en pantallas pequeñas */
+  gap: 15px;
+}
+
+.footer-copyright {
+  flex-grow: 1; /* Ocupa el espacio disponible */
+}
+
+.footer-policy-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap; /* También para pantallas pequeñas */
+}
+
+.footer-policy-links a {
+  color: #6e6e73;
+  text-decoration: none;
+  border-right: 1px solid #d2d2d7;
+  padding-right: 15px;
+}
+
+.footer-policy-links li:last-child a {
+  border-right: none;
+}
+
+.footer-policy-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-region a {
+  color: #6e6e73;
+  text-decoration: none;
+}
+.footer-region a:hover {
+  text-decoration: underline;
+}
+
+/* --- Media Query para Celulares --- */
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: flex-start; /* Los alinea a la izquierda */
+  }
+
+  .footer-policy-links {
+    margin: 10px 0;
+  }
+}

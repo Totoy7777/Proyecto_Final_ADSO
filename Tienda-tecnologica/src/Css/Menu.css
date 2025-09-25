@@ -1,0 +1,162 @@
+.menu-container {
+  background-color: #fff;
+  padding: 0.8rem 2rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-content: center;
+  margin: 0 auto;
+  border: none;
+
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.menu li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.menu a:hover {
+  color: #007bff;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.right-icons2 {
+  margin-left: auto; /* empuja los íconos de búsqueda y perfil a la derecha */
+}
+
+/*
+  Estilo para el contenedor de la barra de búsqueda.
+  Le damos un poco de espacio y lo alineamos.
+*/
+
+/* Contenedor del buscador */
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d2d2d7; /* Borde del contenedor */
+    background-color: #f0f0f5; /* Fondo del contenedor */
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    flex-grow: 1; /* Permite que el contenedor crezca */
+    margin-left: auto; /* Lo empuja a la derecha */
+    margin-right: 20px;
+}
+
+/* Campo de entrada de texto */
+.search-input {
+    background-color: transparent;
+    border: none;
+    color: #1d1d1f;
+    padding: 5px;
+    outline: none;
+    font-size: 1em;
+    flex-grow: 1; /* Permite que el input ocupe todo el espacio disponible */
+   
+}
+
+/* Estilo para el placeholder (el texto de ayuda) */
+.search-input::placeholder {
+    color: #8e8e93;
+}
+
+/* Botón de la 'X' para cerrar */
+.search-close-btn {
+    background-color: transparent;
+    border: none;
+    color: #a80909;
+    cursor: pointer;
+    font-size: 1.2em; /* Tamaño de la 'X' */
+    padding: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.search-close-btn:hover {
+    color: #960625;
+}
+/*
+  Si quieres que el ícono de la lupa se vea igual al de tu ejemplo,
+  puedes usar esta regla.
+*/
+.menu .right-icons1 .icon {
+    font-size: 2em; /* Aumenta el tamaño del ícono de la lupa */
+    color: #6e6e73;
+}
+
+/* Asegúrate de que tu clase .menu principal tenga estas propiedades */
+.menu {
+  display: flex; /* Esto es clave para alinear todo */
+  align-items: center; /* Centra los items verticalmente */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* Y que la primera de tus clases de la derecha empuje todo */
+.right-icons1 {
+  margin-left: auto; /* ¡Esta es la magia! Empuja este y los siguientes íconos a la derecha */
+  /* ... tus otros estilos ... */
+}
+
+/* --- AGREGA ESTA NUEVA CLASE AL FINAL DE TU ARCHIVO --- */
+.right-icons3 {
+  padding: 0 15px; /* Ajusta el espaciado como necesites */
+  display: flex;
+  align-items: center;
+}
+
+.right-icons3 .icon {
+  font-size: 1.2rem; /* O el tamaño que uses para los otros íconos */
+  color: #333; /* O el color que uses */
+}
+
+.right-icons3 a:hover .icon {
+  color: #0071e3; /* Color al pasar el mouse */
+}
+
+/* Estilos para el contador del carrito */
+
+.cart-link {
+  position: relative; /* Clave para posicionar la burbuja encima */
+  display: flex;
+  align-items: center;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;      /* Lo mueve un poco hacia arriba */
+  right: -10px;   /* Lo mueve un poco a la derecha */
+  background-color: #d00; /* Color rojo, puedes cambiarlo */
+  color: white;
+  border-radius: 50%; /* Para que sea un círculo perfecto */
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+  border: 1px solid white; /* Un borde blanco para que resalte */
+}
