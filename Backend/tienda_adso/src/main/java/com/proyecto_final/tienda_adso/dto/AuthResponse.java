@@ -5,12 +5,16 @@ public class AuthResponse {
     private String message;
     private String nombre;
     private String email;
+    private Integer userId;
+    private boolean admin;
 
-    public AuthResponse(boolean success, String message, String nombre, String email) {
+    public AuthResponse(boolean success, String message, String nombre, String email, Integer userId, boolean admin) {
         this.success = success;
         this.message = message;
         this.nombre = nombre;
         this.email = email;
+        this.userId = userId;
+        this.admin = admin;
     }
 
     // Getters y setters
@@ -25,4 +29,10 @@ public class AuthResponse {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
+
+    public boolean isAdmin() { return admin; }
+    public void setAdmin(boolean admin) { this.admin = admin; }
 }

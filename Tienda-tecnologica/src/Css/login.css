@@ -68,3 +68,36 @@
   transform: scale(1.09);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agregamos un efecto de sombra */
 }
+
+/* Toggle para mostrar/ocultar contraseña */
+.password-field {
+  position: relative;
+}
+
+.password-field .form-control {
+  padding-right: 3rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #007bff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus {
+  color: #0056b3;
+  outline: none;
+}
+
+.password-toggle-btn:disabled {
+  color: #6c757d;
+  cursor: not-allowed;
+}

@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "https://unamazedly-demure-veola.ngrok-free.dev"})
 public class CartController {
 
     @Autowired private CartService cartService;
@@ -70,4 +70,3 @@ public class CartController {
         return ResponseEntity.ok(orderService.checkoutFromCart(cart));
     }
 }
-

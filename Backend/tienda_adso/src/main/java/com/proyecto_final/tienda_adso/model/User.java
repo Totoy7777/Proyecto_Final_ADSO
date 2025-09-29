@@ -4,10 +4,14 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 
@@ -23,6 +27,8 @@ public class User {
     private String email;
 
     @Column(name = "password_hash", nullable = false, length = 255)
+    @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonAlias("passwordHash")
     private String passwordHash;
 
     private String direccion;
@@ -30,6 +36,14 @@ public class User {
 
     @Column(name = "creado_en", insertable = false, updatable = false)
     private LocalDateTime creadoEn;
+
+    @Column(name = "reset_code")
+    @JsonIgnore
+    private String resetCode;
+
+    @Column(name = "reset_code_expires_at")
+    @JsonIgnore
+    private LocalDateTime resetCodeExpiresAt;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
@@ -61,4 +75,10 @@ public class User {
 
     public LocalDateTime getCreadoEn() { return creadoEn; }
     public void setCreadoEn(LocalDateTime creadoEn) { this.creadoEn = creadoEn; }
+
+    public String getResetCode() { return resetCode; }
+    public void setResetCode(String resetCode) { this.resetCode = resetCode; }
+
+    public LocalDateTime getResetCodeExpiresAt() { return resetCodeExpiresAt; }
+    public void setResetCodeExpiresAt(LocalDateTime resetCodeExpiresAt) { this.resetCodeExpiresAt = resetCodeExpiresAt; }
 }

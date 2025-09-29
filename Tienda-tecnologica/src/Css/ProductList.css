@@ -93,3 +93,94 @@
   margin: auto;
   padding: auto;
 }
+
+.product-price {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.product-category {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.admin-feedback {
+  grid-column: 1 / -1;
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.admin-controls {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-warning {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #d39e00;
+}
+
+.admin-edit-form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.admin-edit-form input,
+.admin-edit-form textarea,
+.admin-edit-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  font-size: 0.95rem;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-secondary:hover {
+  background-color: #5c636a;
+}
+
+.btn-danger:hover {
+  background-color: #bb2d3b;
+}

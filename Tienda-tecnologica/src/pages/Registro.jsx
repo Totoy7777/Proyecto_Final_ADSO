@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../Css/login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/Logototal.png"
+import Logo from "../assets/Logototal.png";
+import { API_BASE, NGROK_SKIP_HEADER } from "../api/axios";
 
 
 const Registro = () => {
@@ -17,28 +18,36 @@ const Registro = () => {
     nombre: "",
     tipoDoc: "",
     numeroDoc: "",
-    telefono: "", // NUEVO CAMPO
-    email: "",   // NUEVO CAMPO
-    direccion: "",// NUEVO CAMPO
+    telefono: "",
+    email: "",
+    direccion: "",
     password: "",
     confirmPass: "",
+    rol: "USER",
   });
 
   const [error, setError] = useState("");
 
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+    confirmPass: false,
+  });
+
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData({
-      ...formData,
-      [id]: value,
-    });
+    const { id, name, value, type, checked } = e.target;
+    const key = name || id;
+    const newValue = type === "checkbox" ? checked : value;
+    setFormData((prev) => ({
+      ...prev,
+      [key]: newValue,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 2. EXTRAEMOS LOS NUEVOS VALORES
-    const { nombre, tipoDoc, numeroDoc, telefono, email, direccion, password, confirmPass } = formData;
+    const { nombre, tipoDoc, numeroDoc, telefono, email, direccion, password, confirmPass, rol } = formData;
 
     // 3. ACTUALIZAMOS LA VALIDACIÓN DE CAMPOS VACÍOS
     if (!nombre || !tipoDoc || !numeroDoc || !telefono || !email || !direccion || !password || !confirmPass) {
@@ -80,36 +89,54 @@ const Registro = () => {
     }
 
     try {
-      const response = await fetch("https://gratulant-nonsignable-karol.ngrok-free.dev/api/users/register", {
+      const payload = {
+        nombre,
+        telefono,
+        email: email.trim().toLowerCase(),
+        direccion,
+        password,
+        admin: rol === "ADMIN",
+        tipoDoc,
+        numeroDoc,
+      };
+
+      const response = await fetch(`${API_BASE}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...NGROK_SKIP_HEADER,
         },
-        // 4. AÑADIMOS LOS NUEVOS CAMPOS AL CUERPO DE LA PETICIÓN
-        body: JSON.stringify({
-          nombre,
-          tipoDoc,
-          numeroDoc,
-          telefono,  // NUEVO CAMPO
-          email,    // NUEVO CAMPO
-          direccion, // NUEVO CAMPO
-          passwordHash: password,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        const data = await response.text();
-        alert("✅ " + data);
-        navegacion("/Login");
-      } else {
-        alert("Error en el registro.")
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.success) {
+        alert("✅ " + (data.message || "Usuario registrado con éxito"));
+        navegacion("/login");
+        return;
       }
+
+      if (response.status === 409) {
+        setError("❌ Este correo ya está registrado. Ingresa con tu cuenta desde el botón 'Ingresa'.");
+        return;
+      }
+
+      const message = data?.message || "No fue posible completar el registro.";
+      setError("❌ " + message);
     } catch (error) {
       console.error("Error: ", error);
       setError("No se pudo conectar con el servidor.");
     }
 
     // Se eliminó el alert("✅ Registro exitoso") de aquí para evitar que se muestre dos veces.
+  };
+
+  const togglePasswordVisibility = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
   };
 
   return (
@@ -241,12 +268,12 @@ const Registro = () => {
                       </div>
 
                       {/* Contraseña */}
-                      <div className="form-outline mb-4">
+                      <div className="form-outline mb-4 password-field">
                         <label className="form-label" htmlFor="password">
                           Contraseña
                         </label>
                         <input
-                          type="password"
+                          type={showPassword.password ? "text" : "password"}
                           id="password"
                           name="password"
                           value={formData.password}
@@ -255,15 +282,23 @@ const Registro = () => {
                           placeholder="Ingresa Contraseña"
                           required
                         />
+                        <button
+                          type="button"
+                          className="password-toggle-btn"
+                          onClick={() => togglePasswordVisibility("password")}
+                          aria-label={showPassword.password ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        >
+                          {showPassword.password ? "Ocultar" : "Mostrar"}
+                        </button>
                       </div>
 
                       {/* Confirmar Contraseña */}
-                      <div className="form-outline mb-4">
+                      <div className="form-outline mb-4 password-field">
                         <label className="form-label" htmlFor="confirmPass">
                           Confirma Contraseña
                         </label>
                         <input
-                          type="password"
+                          type={showPassword.confirmPass ? "text" : "password"}
                           id="confirmPass"
                           value={formData.confirmPass}
                           onChange={handleChange}
@@ -271,6 +306,51 @@ const Registro = () => {
                           placeholder="Confirma Contraseña"
                           required
                         />
+                        <button
+                          type="button"
+                          className="password-toggle-btn"
+                          onClick={() => togglePasswordVisibility("confirmPass")}
+                          aria-label={showPassword.confirmPass ? "Ocultar confirmación" : "Mostrar confirmación"}
+                        >
+                          {showPassword.confirmPass ? "Ocultar" : "Mostrar"}
+                        </button>
+                      </div>
+
+                      {/* Tipo de cuenta */}
+                      <div className="form-outline mb-4">
+                        <label className="form-label d-block" htmlFor="rol">
+                          Tipo de cuenta
+                        </label>
+                        <div className="d-flex gap-4">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="rol"
+                              id="rolUser"
+                              value="USER"
+                              checked={formData.rol === "USER"}
+                              onChange={handleChange}
+                            />
+                            <label className="form-check-label" htmlFor="rolUser">
+                              Usuario comprador
+                            </label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="rol"
+                              id="rolAdmin"
+                              value="ADMIN"
+                              checked={formData.rol === "ADMIN"}
+                              onChange={handleChange}
+                            />
+                            <label className="form-check-label" htmlFor="rolAdmin">
+                              Administrador / vendedor
+                            </label>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Mensaje de error */}

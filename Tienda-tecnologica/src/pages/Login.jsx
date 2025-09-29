@@ -3,12 +3,19 @@ import "../Css/login.css"
 import Logo from "../assets/Logototal.png"
 
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { API_BASE, NGROK_SKIP_HEADER } from "../api/axios";
 
 const Login = () => {
   const navegacion = useNavigate();
+  const { login: storeSession } = useAuth();
 
   const irRegistro = () => {
     navegacion("/registro");
+  };
+
+  const irRecuperar = () => {
+    navegacion("/recuperar");
   };
 
   // Estado del formulario
@@ -19,6 +26,9 @@ const Login = () => {
 
   // Estado para errores
   const [error, setError] = useState("");
+
+  // Controla la visibilidad de la contraseña
+  const [showPassword, setShowPassword] = useState(false);
 
   // Manejar cambios en los inputs
   const handleChange = (e) => {
@@ -46,34 +56,41 @@ const Login = () => {
 
     setError(""); // limpio errores
 
-try {
-  const payload = {
-    email: formData.email.trim().toLowerCase(), // normaliza email
-    password: formData.password,                // la contraseña tal cual
-  };
+  try {
+    const payload = {
+      email: formData.email.trim().toLowerCase(), // normaliza email
+      password: formData.password,                // la contraseña tal cual
+    };
 
-  const response = await fetch("https://gratulant-nonsignable-karol.ngrok-free.dev/api/users/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+    const response = await fetch(`${API_BASE}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...NGROK_SKIP_HEADER,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    throw new Error("Error en el login");
-  }
+    const data = await response.json();
 
-  const data = await response.json();
-  console.log("Respuesta del backend:", data);
+    if (!response.ok || !data?.success) {
+      const message = data?.message || "Usuario o contraseña incorrectos.";
+      throw new Error(message);
+    }
 
-  // ✅ Si llegamos aquí, login fue exitoso
-  navegacion("/");
+    storeSession(payload, data);
+
+    if (data.admin) {
+      navegacion("/admin/productos");
+    } else {
+      navegacion("/");
+    }
 
 } catch (error) {
   console.error("Error:", error);
-  setError("❌ Usuario o contraseña incorrectos.");
+  setError(`❌ ${error.message || "Usuario o contraseña incorrectos."}`);
 }
 
- 
   };
 
   return (
@@ -122,12 +139,12 @@ try {
                       </div>
 
                       {/* Contraseña */}
-                      <div className="form-outline mb-4">
+                      <div className="form-outline mb-4 password-field">
                         <label className="form-label" htmlFor="form2Example22">
                           Contraseña
                         </label>
                         <input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           id="form2Example22"
                           className="form-control form-control-lg"
                           placeholder="Ingrese Contraseña"
@@ -135,6 +152,14 @@ try {
                           value={formData.password}
                           onChange={handleChange}
                         />
+                        <button
+                          type="button"
+                          className="password-toggle-btn"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        >
+                          {showPassword ? "Ocultar" : "Mostrar"}
+                        </button>
                       </div>
 
                       {/* Botón ingresar */}
@@ -144,6 +169,13 @@ try {
                           type="submit"
                         >
                           Ingresar
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-link text-decoration-none"
+                          onClick={irRecuperar}
+                        >
+                          ¿Se te olvidó la contraseña?
                         </button>
                       </div>
 

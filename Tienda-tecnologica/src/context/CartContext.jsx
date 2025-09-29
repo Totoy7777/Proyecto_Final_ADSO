@@ -14,25 +14,32 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
+  const getId = (product) => product?.id ?? product?.productId;
+
   // Función para AGREGAR productos al carrito
   const addToCart = (product) => {
+    const productId = getId(product);
+    if (!productId) {
+      console.warn("Producto sin identificador, no se puede adicionar al carrito", product);
+      return;
+    }
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      const existingItem = prevItems.find(item => getId(item) === productId);
       if (existingItem) {
         // Si ya existe, solo aumentamos la cantidad
         return prevItems.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          getId(item) === productId ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
         // Si es nuevo, lo agregamos con cantidad 1
-        return [...prevItems, { ...product, quantity: 1 }];
+        return [...prevItems, { ...product, id: productId, quantity: 1 }];
       }
     });
   };
 
   // Función para ELIMINAR un producto del carrito
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCartItems(prevItems => prevItems.filter(item => getId(item) !== productId));
   };
   
   // Función para LIMPIAR todo el carrito

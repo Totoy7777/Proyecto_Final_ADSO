@@ -160,3 +160,30 @@
   line-height: 1;
   border: 1px solid white; /* Un borde blanco para que resalte */
 }
+
+.user-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.user-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.right-icons-admin {
+  margin-left: 1rem;
+}
+
+.admin-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #0d6efd;
+}
+
+.admin-link:hover {
+  color: #084298;
+}
