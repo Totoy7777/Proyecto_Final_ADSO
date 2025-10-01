@@ -39,11 +39,10 @@ public class UserController {
             user.setDireccion(request.getDireccion());
             user.setTelefono(request.getTelefono());
 
-            User savedUser = userService.save(user, request.isAdmin());
+            User savedUser = userService.save(user);
             boolean isAdmin = userService.isAdmin(savedUser);
-            String message = isAdmin
-                    ? "Ahorra eres admin perro"
-                    : "Usuario (normal) registrado con éxito";
+            boolean isSuperAdmin = userService.isSuperAdmin(savedUser);
+            String message = "Usuario registrado con éxito";
 
             return ResponseEntity.ok(new AuthResponse(
                     true,
@@ -51,14 +50,15 @@ public class UserController {
                     savedUser.getNombre(),
                     savedUser.getEmail(),
                     savedUser.getUserId(),
-                    isAdmin
+                    isAdmin,
+                    isSuperAdmin
             ));
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new AuthResponse(false, ex.getMessage(), null, null, null, false));
+                    .body(new AuthResponse(false, ex.getMessage(), null, null, null, false, false));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(false, ex.getMessage(), null, null, null, false));
+                    .body(new AuthResponse(false, ex.getMessage(), null, null, null, false, false));
         }
     }
 
@@ -134,17 +134,19 @@ public class UserController {
         if (user.isPresent()) {
             User u = user.get();
             boolean isAdmin = userService.isAdmin(u);
+            boolean isSuperAdmin = userService.isSuperAdmin(u);
             return ResponseEntity.ok(new AuthResponse(
                     true,
                     "Login exitoso",
                     u.getNombre(),
                     u.getEmail(),
                     u.getUserId(),
-                    isAdmin
+                    isAdmin,
+                    isSuperAdmin
             ));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new AuthResponse(false, "Credenciales inválidas", null, null, null, false));
+                .body(new AuthResponse(false, "Credenciales inválidas", null, null, null, false, false));
     }
 
     @GetMapping
@@ -163,7 +165,8 @@ public class UserController {
                         u.getNombre(),
                         u.getEmail(),
                         u.getUserId(),
-                        userService.isAdmin(u)
+                        userService.isAdmin(u),
+                        userService.isSuperAdmin(u)
                 )))
                 .orElse(ResponseEntity.notFound().build());
     }

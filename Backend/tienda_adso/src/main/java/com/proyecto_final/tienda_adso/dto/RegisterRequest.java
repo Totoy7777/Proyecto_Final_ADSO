@@ -10,7 +10,6 @@ public class RegisterRequest {
     private String password;
     private String direccion;
     private String telefono;
-    private boolean admin;
 
     public String getNombre() {
         return nombre;
@@ -52,11 +51,4 @@ public class RegisterRequest {
         this.telefono = telefono;
     }
 
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
 }

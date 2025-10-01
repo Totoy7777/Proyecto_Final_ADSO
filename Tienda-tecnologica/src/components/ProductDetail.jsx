@@ -10,7 +10,8 @@ import "../Css/ProductDetail.css";
 const ProductDetail = () => {
   const { productId } = useParams();
   const { addToCart } = useCart();
-  const { user, authHeader, isAuthenticated, isAdmin } = useAuth();
+  const { user, authHeader, isAuthenticated, isAdmin, isSuperAdmin } = useAuth();
+  const canManage = isAdmin || isSuperAdmin;
   const [product, setProduct] = useState(null);
   const [error, setError] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -391,7 +392,7 @@ const ProductDetail = () => {
                     </div>
                   )}
 
-                  {isAdmin && (
+                  {canManage && (
                     <div className="admin-controls">
                       {activeResponse === review.reviewId ? (
                         <form

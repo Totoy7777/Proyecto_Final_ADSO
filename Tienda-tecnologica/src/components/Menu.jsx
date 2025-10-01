@@ -4,7 +4,6 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { getCategories } from "../api/categories";
 import {
-  buildFallbackCategories,
   getCategoryKey,
   getCategorySlug,
   loadCategoriesFromCache,
@@ -19,8 +18,6 @@ import { FaHome, FaLaptop, FaMobileAlt, FaTv, FaGamepad, FaHeadphones, FaSearch,
 import "../Css/Menu.css";
 import "../Css/Submenu.css";
 
-const fallbackCategories = buildFallbackCategories();
-
 const categoryIcons = {
   computadores: <FaLaptop className="icon" />,
   computadoras: <FaLaptop className="icon" />,
@@ -34,15 +31,10 @@ const defaultCategoryIcon = <FaTags className="icon" />;
 
 const Menu = () => {
   const { cartItems } = useCart();
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSuperAdmin } = useAuth();
+  const hideHomeLink = isAdmin || isSuperAdmin;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [categoryRecords, setCategoryRecords] = useState(() => {
-    const cached = loadCategoriesFromCache();
-    if (cached.length > 0) {
-      return cached;
-    }
-    return fallbackCategories;
-  });
+  const [categoryRecords, setCategoryRecords] = useState(() => loadCategoriesFromCache());
   const [isFetchingCategories, setIsFetchingCategories] = useState(false);
 
   const toggleSearch = () => {
@@ -85,9 +77,8 @@ const Menu = () => {
           );
           saveCategoriesToCache(normalized);
         } else {
-          setCategoryRecords((current) =>
-            current.length === 0 ? fallbackCategories : current
-          );
+          setCategoryRecords([]);
+          saveCategoriesToCache([]);
         }
       } finally {
         if (mounted) {
@@ -133,12 +124,14 @@ const Menu = () => {
   return (
     <nav className="menu-container">
       <ul className="menu">
-        <li>
-          <Link to="/">
-            <FaHome className="icon" />
-            <span>Inicio</span>
-          </Link>
-        </li>
+        {!hideHomeLink && (
+          <li>
+            <Link to="/">
+              <FaHome className="icon" />
+              <span>Inicio</span>
+            </Link>
+          </li>
+        )}
 
         {navCategories.length === 0 && isFetchingCategories && (
           <li style={{ color: "#6c757d", padding: "0.75rem 1rem" }}>Cargando categorías...</li>
@@ -195,11 +188,15 @@ const Menu = () => {
           )}
         </li>
 
-        {isAdmin && (
+        {(isAdmin || isSuperAdmin) && (
           <li className="right-icons-admin">
             <Link to="/admin/productos" className="admin-link">
               <FaTools className="icon" />
-              <span>Administrar</span>
+              <span>Productos</span>
+            </Link>
+            <Link to="/admin/pedidos" className="admin-link">
+              <FaShoppingCart className="icon" />
+              <span>Pedidos</span>
             </Link>
           </li>
         )}

@@ -3,11 +3,12 @@ package com.proyecto_final.tienda_adso.service;
 import com.proyecto_final.tienda_adso.model.Administrator;
 import com.proyecto_final.tienda_adso.model.User;
 import com.proyecto_final.tienda_adso.repository.AdministratorRepository;
+import com.proyecto_final.tienda_adso.repository.SuperAdministratorRepository;
 import com.proyecto_final.tienda_adso.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,29 +19,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AdministratorRepository administratorRepository;
+    private final SuperAdministratorRepository superAdministratorRepository;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       AdministratorRepository administratorRepository) {
+                       AdministratorRepository administratorRepository,
+                       SuperAdministratorRepository superAdministratorRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.administratorRepository = administratorRepository;
+        this.superAdministratorRepository = superAdministratorRepository;
     }
 
     public User save(User user) {
-        return save(user, false);
-    }
-
-    public User save(User user, boolean createAdmin) {
-        User savedUser = persistUser(user);
-
-        if (createAdmin && !administratorRepository.existsByUser_UserId(savedUser.getUserId())) {
-            Administrator administrator = new Administrator();
-            administrator.setUser(savedUser);
-            administratorRepository.save(administrator);
-        }
-
-        return savedUser;
+        return persistUser(user);
     }
 
     private User persistUser(User user) {
@@ -106,7 +98,41 @@ public class UserService {
         if (user == null) {
             return false;
         }
-        return administratorRepository.existsByUser_UserId(user.getUserId());
+        return administratorRepository.existsByUser_UserId(user.getUserId())
+                || isSuperAdmin(user);
+    }
+
+    public boolean isSuperAdmin(User user) {
+        if (user == null) {
+            return false;
+        }
+        return superAdministratorRepository.existsByUser_UserId(user.getUserId());
+    }
+
+    @Transactional
+    public void updateAdminStatus(int userId, boolean grantAdmin) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con ese id"));
+
+        boolean alreadyAdmin = administratorRepository.existsByUser_UserId(userId);
+        boolean isSuperAdmin = isSuperAdmin(user);
+
+        if (isSuperAdmin && !grantAdmin) {
+            throw new IllegalStateException("No se pueden revocar los permisos de un super administrador");
+        }
+
+        if (grantAdmin) {
+            if (!alreadyAdmin) {
+                Administrator administrator = new Administrator();
+                administrator.setUser(user);
+                administratorRepository.save(administrator);
+            }
+            return;
+        }
+
+        if (alreadyAdmin) {
+            administratorRepository.deleteByUser_UserId(userId);
+        }
     }
 
     private String encodeIfNeeded(String password) {

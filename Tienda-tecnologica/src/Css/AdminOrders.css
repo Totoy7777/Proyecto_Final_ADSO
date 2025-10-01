@@ -1,0 +1,20 @@
+.admin-orders { max-width: 1200px; margin: 40px auto; padding: 20px; }
+.admin-orders h1 { margin-bottom: 20px; }
+.admin-orders-error { color: #dc3545; margin-bottom: 15px; }
+.admin-orders-content { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+.admin-orders-list table { width: 100%; border-collapse: collapse; }
+.admin-orders-list th,
+.admin-orders-list td { border-bottom: 1px solid #e5e5e5; padding: 8px; text-align: left; }
+.admin-orders-list tbody tr:hover { background: #f7f7f7; }
+.admin-orders-list button { padding: 6px 12px; cursor: pointer; }
+.admin-orders-list header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.admin-orders-detail { background: #f9fafb; padding: 20px; border-radius: 8px; }
+.admin-orders-detail ul { list-style: none; padding: 0; margin: 0 0 15px 0; }
+.admin-orders-detail li { border-bottom: 1px solid #ddd; padding: 6px 0; }
+.admin-orders-panel { margin-bottom: 20px; }
+.admin-orders-panel select,
+.admin-orders-panel input { margin-top: 6px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
+
+@media (max-width: 1000px) {
+  .admin-orders-content { grid-template-columns: 1fr; }
+}

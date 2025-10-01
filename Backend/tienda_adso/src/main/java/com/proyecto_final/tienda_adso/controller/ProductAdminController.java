@@ -7,6 +7,7 @@ import com.proyecto_final.tienda_adso.model.Product;
 import com.proyecto_final.tienda_adso.service.CategoryService;
 import com.proyecto_final.tienda_adso.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,12 +75,20 @@ public class ProductAdminController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<?> delete(@PathVariable int id) {
         if (productService.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
+        try {
+            productService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SimpleResponse(false, "No se puede eliminar el producto porque está asociado a otras operaciones."));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new SimpleResponse(false, "Ocurrió un error inesperado al eliminar el producto."));
+        }
     }
 
     private void applyRequest(Product product, ProductRequest request, Category category) {

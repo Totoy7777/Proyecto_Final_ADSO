@@ -23,7 +23,6 @@ const Registro = () => {
     direccion: "",
     password: "",
     confirmPass: "",
-    rol: "USER",
   });
 
   const [error, setError] = useState("");
@@ -47,7 +46,7 @@ const Registro = () => {
     e.preventDefault();
 
     // 2. EXTRAEMOS LOS NUEVOS VALORES
-    const { nombre, tipoDoc, numeroDoc, telefono, email, direccion, password, confirmPass, rol } = formData;
+    const { nombre, tipoDoc, numeroDoc, telefono, email, direccion, password, confirmPass } = formData;
 
     // 3. ACTUALIZAMOS LA VALIDACIÓN DE CAMPOS VACÍOS
     if (!nombre || !tipoDoc || !numeroDoc || !telefono || !email || !direccion || !password || !confirmPass) {
@@ -95,7 +94,6 @@ const Registro = () => {
         email: email.trim().toLowerCase(),
         direccion,
         password,
-        admin: rol === "ADMIN",
         tipoDoc,
         numeroDoc,
       };
@@ -314,43 +312,6 @@ const Registro = () => {
                         >
                           {showPassword.confirmPass ? "Ocultar" : "Mostrar"}
                         </button>
-                      </div>
-
-                      {/* Tipo de cuenta */}
-                      <div className="form-outline mb-4">
-                        <label className="form-label d-block" htmlFor="rol">
-                          Tipo de cuenta
-                        </label>
-                        <div className="d-flex gap-4">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="rol"
-                              id="rolUser"
-                              value="USER"
-                              checked={formData.rol === "USER"}
-                              onChange={handleChange}
-                            />
-                            <label className="form-check-label" htmlFor="rolUser">
-                              Usuario comprador
-                            </label>
-                          </div>
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="rol"
-                              id="rolAdmin"
-                              value="ADMIN"
-                              checked={formData.rol === "ADMIN"}
-                              onChange={handleChange}
-                            />
-                            <label className="form-check-label" htmlFor="rolAdmin">
-                              Administrador / vendedor
-                            </label>
-                          </div>
-                        </div>
                       </div>
 
                       {/* Mensaje de error */}

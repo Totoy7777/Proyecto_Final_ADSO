@@ -7,14 +7,22 @@ public class AuthResponse {
     private String email;
     private Integer userId;
     private boolean admin;
+    private boolean superAdmin;
 
-    public AuthResponse(boolean success, String message, String nombre, String email, Integer userId, boolean admin) {
+    public AuthResponse(boolean success,
+                        String message,
+                        String nombre,
+                        String email,
+                        Integer userId,
+                        boolean admin,
+                        boolean superAdmin) {
         this.success = success;
         this.message = message;
         this.nombre = nombre;
         this.email = email;
         this.userId = userId;
         this.admin = admin;
+        this.superAdmin = superAdmin;
     }
 
     // Getters y setters
@@ -35,4 +43,7 @@ public class AuthResponse {
 
     public boolean isAdmin() { return admin; }
     public void setAdmin(boolean admin) { this.admin = admin; }
+
+    public boolean isSuperAdmin() { return superAdmin; }
+    public void setSuperAdmin(boolean superAdmin) { this.superAdmin = superAdmin; }
 }

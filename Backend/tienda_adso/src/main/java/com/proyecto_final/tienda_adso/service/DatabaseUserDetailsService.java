@@ -2,6 +2,7 @@ package com.proyecto_final.tienda_adso.service;
 
 import com.proyecto_final.tienda_adso.model.User;
 import com.proyecto_final.tienda_adso.repository.AdministratorRepository;
+import com.proyecto_final.tienda_adso.repository.SuperAdministratorRepository;
 import com.proyecto_final.tienda_adso.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +19,14 @@ public class DatabaseUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final AdministratorRepository administratorRepository;
+    private final SuperAdministratorRepository superAdministratorRepository;
 
     public DatabaseUserDetailsService(UserRepository userRepository,
-                                      AdministratorRepository administratorRepository) {
+                                      AdministratorRepository administratorRepository,
+                                      SuperAdministratorRepository superAdministratorRepository) {
         this.userRepository = userRepository;
         this.administratorRepository = administratorRepository;
+        this.superAdministratorRepository = superAdministratorRepository;
     }
 
     @Override
@@ -34,7 +38,12 @@ public class DatabaseUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        if (administratorRepository.existsByUser_UserId(user.getUserId())) {
+        boolean isSuperAdmin = superAdministratorRepository.existsByUser_UserId(user.getUserId());
+        if (isSuperAdmin) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));
+        }
+
+        if (isSuperAdmin || administratorRepository.existsByUser_UserId(user.getUserId())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 

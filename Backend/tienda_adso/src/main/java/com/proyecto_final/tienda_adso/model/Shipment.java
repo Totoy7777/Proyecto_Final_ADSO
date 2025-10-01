@@ -19,6 +19,15 @@ public class Shipment {
     @Column(name = "direccion_envio")
     private String direccionEnvio;
 
+    @Column(name = "nombre_destinatario")
+    private String nombreDestinatario;
+
+    @Column(name = "telefono_contacto")
+    private String telefonoContacto;
+
+    @Column(name = "notas_envio")
+    private String notasEnvio;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_envio")
     private EstadoEnvio estadoEnvio = EstadoEnvio.LISTO;
@@ -40,6 +49,15 @@ public class Shipment {
 
     public String getDireccionEnvio() { return direccionEnvio; }
     public void setDireccionEnvio(String direccionEnvio) { this.direccionEnvio = direccionEnvio; }
+
+    public String getNombreDestinatario() { return nombreDestinatario; }
+    public void setNombreDestinatario(String nombreDestinatario) { this.nombreDestinatario = nombreDestinatario; }
+
+    public String getTelefonoContacto() { return telefonoContacto; }
+    public void setTelefonoContacto(String telefonoContacto) { this.telefonoContacto = telefonoContacto; }
+
+    public String getNotasEnvio() { return notasEnvio; }
+    public void setNotasEnvio(String notasEnvio) { this.notasEnvio = notasEnvio; }
 
     public EstadoEnvio getEstadoEnvio() { return estadoEnvio; }
     public void setEstadoEnvio(EstadoEnvio estadoEnvio) { this.estadoEnvio = estadoEnvio; }

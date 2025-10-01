@@ -68,7 +68,8 @@ const sanitizeStockValue = (value) => {
 
 
 const AdminProducts = () => {
-  const { isAuthenticated, isAdmin, authHeader } = useAuth();
+  const { isAuthenticated, isAdmin, isSuperAdmin, authHeader } = useAuth();
+  const canManage = isAdmin || isSuperAdmin;
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState(() => loadCategoriesFromCache());
   const [form, setForm] = useState({ ...emptyForm });
@@ -222,17 +223,17 @@ const AdminProducts = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated || !isAdmin) {
+    if (!isAuthenticated || !canManage) {
       return;
     }
     loadData();
-  }, [isAuthenticated, isAdmin, loadData]);
+  }, [isAuthenticated, canManage, loadData]);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!isAdmin) {
+  if (!canManage) {
     return <Navigate to="/" replace />;
   }
 

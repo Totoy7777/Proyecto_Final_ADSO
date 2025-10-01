@@ -18,9 +18,11 @@ import Footer from "./components/Footer.jsx";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import CartPage from "./pages/CartPage"; 
+import CheckoutPage from "./pages/CheckoutPage";
 import ProductDetail from './components/ProductDetail';
 import Profile from "./pages/Profile";
 import AdminProducts from "./pages/AdminProducts";
+import AdminOrders from "./pages/AdminOrders";
 
 function App() {
   return (
@@ -51,8 +53,10 @@ function App() {
               <Route path="/producto/:productId" element={<ProductDetail />} />
               {/* 3. AGREGA LA RUTA PARA LA PÁGINA DEL CARRITO */}
               <Route path="/carrito" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/admin/productos" element={<AdminProducts />} />
+              <Route path="/admin/pedidos" element={<AdminOrders />} />
 
             </Routes>
             <Footer></Footer>

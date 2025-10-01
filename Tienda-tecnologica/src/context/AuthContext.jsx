@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       nombre: payload.nombre,
       email: payload.email,
       isAdmin: Boolean(payload.admin),
+      isSuperAdmin: Boolean(payload.superAdmin),
     };
     setState({ user, authHeader });
   };
@@ -62,6 +63,7 @@ export const AuthProvider = ({ children }) => {
       authHeader: state.authHeader,
       isAuthenticated: Boolean(state.user),
       isAdmin: Boolean(state.user?.isAdmin),
+      isSuperAdmin: Boolean(state.user?.isSuperAdmin),
       login,
       logout,
     }),

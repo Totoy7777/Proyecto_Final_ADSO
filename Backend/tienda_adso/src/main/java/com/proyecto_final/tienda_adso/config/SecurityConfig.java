@@ -33,6 +33,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .authenticationProvider(authenticationProvider)
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/super-admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )

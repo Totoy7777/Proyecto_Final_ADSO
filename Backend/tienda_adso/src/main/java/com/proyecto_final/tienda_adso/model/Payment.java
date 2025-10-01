@@ -33,6 +33,9 @@ public class Payment {
     @Column(name = "referencia_tx", length = 100)
     private String referenciaTx;
 
+    @Column(name = "detalles_pago", columnDefinition = "TEXT")
+    private String detallesPago;
+
     public enum EstadoPago { PENDIENTE, APROBADO, FALLIDO }
 
     // Getters and Setters
@@ -56,4 +59,7 @@ public class Payment {
 
     public String getReferenciaTx() { return referenciaTx; }
     public void setReferenciaTx(String referenciaTx) { this.referenciaTx = referenciaTx; }
+
+    public String getDetallesPago() { return detallesPago; }
+    public void setDetallesPago(String detallesPago) { this.detallesPago = detallesPago; }
 }

@@ -40,7 +40,8 @@ const adaptProduct = (product) => {
 const fallbackCategories = buildFallbackCategories();
 
 const ProductList = ({ products = [], onProductsChange }) => {
-  const { isAdmin, authHeader } = useAuth();
+  const { isAdmin, isSuperAdmin, authHeader } = useAuth();
+  const canManage = isAdmin || isSuperAdmin;
   const [items, setItems] = useState(() =>
     (Array.isArray(products) ? products : []).map(adaptProduct)
   );
@@ -130,7 +131,7 @@ const ProductList = ({ products = [], onProductsChange }) => {
   };
 
   const handleDelete = async (product) => {
-    if (!isAdmin || !authHeader) {
+    if (!canManage || !authHeader) {
       setFeedback("No tienes permisos para eliminar productos.");
       return;
     }
@@ -190,7 +191,7 @@ const ProductList = ({ products = [], onProductsChange }) => {
   };
 
   const handleSave = async (product) => {
-    if (!isAdmin || !authHeader) {
+    if (!canManage || !authHeader) {
       setFeedback("No tienes permisos para modificar productos.");
       return;
     }
@@ -251,7 +252,7 @@ const ProductList = ({ products = [], onProductsChange }) => {
   };
 
   const renderAdminControls = (product) => {
-    if (!isAdmin) {
+    if (!canManage) {
       return null;
     }
 
@@ -351,7 +352,7 @@ const ProductList = ({ products = [], onProductsChange }) => {
 
   return (
     <div className="product-list">
-      {feedback && isAdmin && (
+      {feedback && canManage && (
         <div className="admin-feedback">{feedback}</div>
       )}
 

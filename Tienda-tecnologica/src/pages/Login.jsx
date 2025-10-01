@@ -80,7 +80,7 @@ const Login = () => {
 
     storeSession(payload, data);
 
-    if (data.admin) {
+    if (data.admin || data.superAdmin) {
       navegacion("/admin/productos");
     } else {
       navegacion("/");
