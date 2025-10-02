@@ -4,6 +4,7 @@ import com.proyecto_final.tienda_adso.model.Order;
 import com.proyecto_final.tienda_adso.model.OrderItem;
 import com.proyecto_final.tienda_adso.model.Payment;
 import com.proyecto_final.tienda_adso.model.Shipment;
+import com.proyecto_final.tienda_adso.model.ShipmentEvent;
 import com.proyecto_final.tienda_adso.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class InvoiceEmailService {
@@ -50,6 +53,7 @@ public class InvoiceEmailService {
             message.setSubject("Factura de tu compra #" + order.getOrderId());
 
             StringBuilder body = new StringBuilder();
+            NumberFormat currency = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
             body.append("Hola ")
                 .append(user.getNombre() != null ? user.getNombre() : "cliente")
                 .append(",\n\n")
@@ -73,13 +77,13 @@ public class InvoiceEmailService {
                         .append(" x ")
                         .append(item.getCantidad())
                         .append(" = $")
-                        .append(lineTotal);
+                        .append(currency.format(lineTotal));
                     body.append('\n');
                 }
             }
 
             body.append("\nTotal pagado: $")
-                .append(order.getTotal()).append('\n');
+                .append(currency.format(order.getTotal())).append('\n');
 
             if (payment != null) {
                 body.append("Método de pago: ")
@@ -109,6 +113,21 @@ public class InvoiceEmailService {
                 body.append("Estado del envío: ")
                     .append(shipment.getEstadoEnvio())
                     .append('\n');
+
+                List<ShipmentEvent> events = shipment.getEventos();
+                if (events != null && !events.isEmpty()) {
+                    body.append("\nSeguimiento del envío:\n");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    for (ShipmentEvent event : events) {
+                        body.append(" - [")
+                            .append(event.getRegistradoEn() != null ? event.getRegistradoEn().format(formatter) : "--")
+                            .append("] ")
+                            .append(event.getEstado() != null ? event.getEstado() : "ACTUALIZACIÓN")
+                            .append(": ")
+                            .append(event.getMensaje() != null ? event.getMensaje() : "Sin descripción")
+                            .append('\n');
+                    }
+                }
             }
 
             body.append("\nSi tienes dudas sobre tu pedido responde este correo o comunícate con soporte.\n\n")

@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import "../Css/CartPage.css";
 
 const formatter = new Intl.NumberFormat("es-CO", {
@@ -17,9 +18,10 @@ const paymentOptions = [
 
 const CheckoutPage = () => {
   const { cartItems, total, checkout, loading, isAuthenticated } = useCart();
+  const { user, isAdmin, isSuperAdmin } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    shippingName: "",
+  const [form, setForm] = useState(() => ({
+    shippingName: user?.nombre ?? "",
     shippingAddress: "",
     shippingCity: "",
     shippingPhone: "",
@@ -31,10 +33,51 @@ const CheckoutPage = () => {
     cardNumber: "",
     cardExpiration: "",
     cardCvv: "",
-  });
+  }));
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    if (!user?.nombre) {
+      return;
+    }
+    setForm((prev) =>
+      prev.shippingName ? prev : { ...prev, shippingName: user.nombre }
+    );
+  }, [user?.nombre]);
+
+  const steps = useMemo(() => {
+    if (result) {
+      return [
+        { label: "Carrito", status: "done" },
+        { label: "Datos de envío", status: "done" },
+        { label: "Pago", status: "done" },
+        { label: "Confirmación", status: "active" },
+      ];
+    }
+    return [
+      { label: "Carrito", status: "done" },
+      { label: "Datos de envío", status: "active" },
+      { label: "Pago", status: "active" },
+      { label: "Confirmación", status: "pending" },
+    ];
+  }, [result]);
+
+  if (isAdmin || isSuperAdmin) {
+    return (
+      <div className="cart-page-container">
+        <h1>Finalizar compra</h1>
+        <p>
+          El flujo de compra está disponible únicamente para usuarios clientes.
+          Como administrador puedes gestionar los pedidos desde el panel.
+        </p>
+        <Link to="/admin/pedidos" className="btn-checkout">
+          Ir a gestión de pedidos
+        </Link>
+      </div>
+    );
+  }
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -100,6 +143,17 @@ const CheckoutPage = () => {
     return (
       <div className="cart-page-container">
         <h1>Finalizar compra</h1>
+        <div className="checkout-steps">
+          {steps.map((step, index) => (
+            <div
+              key={step.label}
+              className={`checkout-step ${step.status}`}
+            >
+              <span className="checkout-step__number">{index + 1}</span>
+              <span className="checkout-step__label">{step.label}</span>
+            </div>
+          ))}
+        </div>
         <p>Debes iniciar sesión para finalizar tu compra.</p>
         <Link to="/login" className="btn-shop">
           Iniciar sesión
@@ -112,6 +166,17 @@ const CheckoutPage = () => {
     return (
       <div className="cart-page-container">
         <h1>Finalizar compra</h1>
+        <div className="checkout-steps">
+          {steps.map((step, index) => (
+            <div
+              key={step.label}
+              className={`checkout-step ${step.status}`}
+            >
+              <span className="checkout-step__number">{index + 1}</span>
+              <span className="checkout-step__label">{step.label}</span>
+            </div>
+          ))}
+        </div>
         <p>No tienes productos en el carrito.</p>
         <Link to="/" className="btn-shop">
           Volver a la tienda
@@ -124,6 +189,17 @@ const CheckoutPage = () => {
     return (
       <div className="cart-page-container">
         <h1>¡Gracias por tu compra!</h1>
+        <div className="checkout-steps">
+          {steps.map((step, index) => (
+            <div
+              key={step.label}
+              className={`checkout-step ${step.status}`}
+            >
+              <span className="checkout-step__number">{index + 1}</span>
+              <span className="checkout-step__label">{step.label}</span>
+            </div>
+          ))}
+        </div>
         <div className="order-confirmation">
           <p>
             Número de orden: <strong>{result.orderId}</strong>
@@ -142,7 +218,7 @@ const CheckoutPage = () => {
           <button className="btn-shop" onClick={() => navigate("/")}>
             Seguir comprando
           </button>
-          <Link to="/perfil" className="btn-checkout">
+          <Link to="/pedidos" className="btn-checkout">
             Ver mis pedidos
           </Link>
         </div>
@@ -153,6 +229,14 @@ const CheckoutPage = () => {
   return (
     <div className="cart-page-container">
       <h1>Finalizar compra</h1>
+      <div className="checkout-steps">
+        {steps.map((step, index) => (
+          <div key={step.label} className={`checkout-step ${step.status}`}>
+            <span className="checkout-step__number">{index + 1}</span>
+            <span className="checkout-step__label">{step.label}</span>
+          </div>
+        ))}
+      </div>
       <div className="checkout-layout">
         <form className="checkout-form" onSubmit={handleSubmit}>
           <fieldset>
@@ -289,6 +373,9 @@ const CheckoutPage = () => {
           >
             {submitting ? "Procesando..." : "Pagar"}
           </button>
+          <Link to="/carrito" className="btn-shop" style={{ marginLeft: 8 }}>
+            Regresar al carrito
+          </Link>
         </form>
 
         <aside className="checkout-summary">
@@ -304,6 +391,25 @@ const CheckoutPage = () => {
           <p className="checkout-total">
             Total: <strong>{formatter.format(total)}</strong>
           </p>
+          <div className="checkout-shipping-review">
+            <h3>Datos de envío</h3>
+            <p>
+              <strong>Nombre:</strong> {form.shippingName || "Pendiente"}
+            </p>
+            <p>
+              <strong>Dirección:</strong> {form.shippingAddress || "Pendiente"}
+            </p>
+            <p>
+              <strong>Ciudad:</strong> {form.shippingCity || "Pendiente"}
+            </p>
+            <p>
+              <strong>Contacto:</strong> {form.shippingPhone || "Pendiente"}
+            </p>
+            <p className="checkout-shipping-hint">
+              Esta información se utiliza para el envío y el envío del soporte a tu
+              correo.
+            </p>
+          </div>
         </aside>
       </div>
     </div>

@@ -172,6 +172,18 @@
   font-weight: 500;
 }
 
+.orders-link .icon {
+  color: #0d6efd;
+}
+
+.orders-link .user-label {
+  font-size: 0.9rem;
+}
+
+.orders-link:hover .icon {
+  color: #084298;
+}
+
 .right-icons-admin {
   margin-left: 1rem;
   display: flex;
@@ -188,4 +200,19 @@
 
 .admin-link:hover {
   color: #084298;
+}
+
+/* Botón de modo oscuro */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  color: #333;
+}
+
+.theme-toggle:hover .icon {
+  color: #0071e3;
 }

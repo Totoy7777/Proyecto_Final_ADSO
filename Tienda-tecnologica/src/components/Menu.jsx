@@ -14,9 +14,10 @@ import {
   areCategoryListsEqual,
 } from "../utils/categoryUtils";
 import { normalizeName } from "../constants/categories";
-import { FaHome, FaLaptop, FaMobileAlt, FaTv, FaGamepad, FaHeadphones, FaSearch, FaUser, FaTimes, FaShoppingCart, FaTools, FaTags } from "react-icons/fa";
+import { FaHome, FaLaptop, FaMobileAlt, FaTv, FaGamepad, FaHeadphones, FaSearch, FaUser, FaTimes, FaShoppingCart, FaTools, FaTags, FaClipboardList, FaMoon, FaSun } from "react-icons/fa";
 import "../Css/Menu.css";
 import "../Css/Submenu.css";
+import useDarkMode from "../hooks/useDarkMode";
 
 const categoryIcons = {
   computadores: <FaLaptop className="icon" />,
@@ -36,6 +37,8 @@ const Menu = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [categoryRecords, setCategoryRecords] = useState(() => loadCategoriesFromCache());
   const [isFetchingCategories, setIsFetchingCategories] = useState(false);
+
+  const { isDark, toggle } = useDarkMode();
 
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
@@ -175,6 +178,15 @@ const Menu = () => {
           </li>
         )}
 
+        {isAuthenticated && !(isAdmin || isSuperAdmin) && (
+          <li className="right-icons3">
+            <Link to="/pedidos" className="user-link orders-link">
+              <FaClipboardList className="icon" />
+              <span className="user-label">Mis pedidos</span>
+            </Link>
+          </li>
+        )}
+
         <li className="right-icons2">
           {isAuthenticated ? (
             <Link to="/perfil" className="user-link">
@@ -202,11 +214,20 @@ const Menu = () => {
         )}
 
         {/* 4. ACTUALIZAMOS EL CARRITO PARA QUE MUESTRE LA "BURBUJA" CON EL TOTAL */}
+        {!(isAdmin || isSuperAdmin) && (
+          <li className="right-icons3">
+            <Link to="/carrito" className="cart-link">
+              <FaShoppingCart className="icon" />
+              {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+            </Link>
+          </li>
+        )}
+
+        {/* Botón de modo oscuro/claro */}
         <li className="right-icons3">
-          <Link to="/carrito" className="cart-link">
-            <FaShoppingCart className="icon" />
-            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
-          </Link>
+          <button type="button" className="theme-toggle" onClick={toggle} aria-label="Cambiar tema">
+            {isDark ? <FaSun className="icon" /> : <FaMoon className="icon" />}
+          </button>
         </li>
       </ul>
     </nav>

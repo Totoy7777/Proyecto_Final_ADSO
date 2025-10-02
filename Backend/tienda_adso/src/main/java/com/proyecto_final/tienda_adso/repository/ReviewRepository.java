@@ -1,6 +1,7 @@
 package com.proyecto_final.tienda_adso.repository;
 
 import com.proyecto_final.tienda_adso.model.Review;
+import com.proyecto_final.tienda_adso.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,8 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     Optional<Review> findByProduct_ProductIdAndUser_UserId(int productId, int userId);
 
     Optional<Review> findByReviewIdAndProduct_ProductId(int reviewId, int productId);
+
+    List<Review> findByUser(User user);
+
+    List<Review> findByRespuestaAdminUser(User user);
 }

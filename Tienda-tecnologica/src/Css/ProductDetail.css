@@ -193,6 +193,21 @@
   border: 1px solid #ccc;
 }
 
+.stock-status {
+  margin: 12px 0;
+  font-size: 15px;
+  color: #0f5132;
+}
+
+.stock-status strong {
+  margin-left: 4px;
+}
+
+.stock-status-out {
+  color: #b02a37;
+  font-weight: 600;
+}
+
 .add-to-cart-btn {
   flex-grow: 1;
   background-color: #28a745;
@@ -208,6 +223,12 @@
 
 .add-to-cart-btn:hover {
   background-color: #218838;
+}
+
+.add-to-cart-btn:disabled,
+.add-to-cart-btn:disabled:hover {
+  background-color: #adb5bd;
+  cursor: not-allowed;
 }
 
 .extra-actions {

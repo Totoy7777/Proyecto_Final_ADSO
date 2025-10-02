@@ -1,5 +1,7 @@
 package com.proyecto_final.tienda_adso.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -11,11 +13,13 @@ public class CartItem {
     private CartItemId id = new CartItemId();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @MapsId("cartId")
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"cartItems", "orderItems", "reviews", "hibernateLazyInitializer", "handler"})
     @MapsId("productId")
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { getProduct } from "../api/products";
 import { useAuth } from "../context/AuthContext";
@@ -9,6 +9,7 @@ import "../Css/ProductDetail.css";
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { user, authHeader, isAuthenticated, isAdmin, isSuperAdmin } = useAuth();
   const canManage = isAdmin || isSuperAdmin;
@@ -23,6 +24,12 @@ const ProductDetail = () => {
   const [responseDrafts, setResponseDrafts] = useState({});
   const [respondingReviewId, setRespondingReviewId] = useState(null);
   const [deletingReviewId, setDeletingReviewId] = useState(null);
+  const [qty, setQty] = useState(1);
+
+  const maxQty = useMemo(() => {
+    const raw = Number(product?.stock ?? product?.inventario ?? 0);
+    return Number.isFinite(raw) && raw > 0 ? raw : 0;
+  }, [product?.stock, product?.inventario]);
 
   const reloadReviews = useCallback(async () => {
     if (!productId) {
@@ -85,10 +92,23 @@ const ProductDetail = () => {
     });
   }, [existingUserReview, submittingReview]);
 
-  const handleAddToCart = () => {
-    if (product) {
-      addToCart(product);
-      alert(`"${product.name}" fue agregado al carrito.`);
+  const handleAddToCart = async () => {
+    if (!product) {
+      return;
+    }
+    if (canManage) {
+      alert("Los administradores gestionan los pedidos desde el panel, no desde el carrito.");
+      return;
+    }
+    const available = Number(product.stock ?? product.inventario ?? 0);
+    if (Number.isFinite(available) && available <= 0) {
+      alert("Este producto no tiene stock disponible por el momento.");
+      return;
+    }
+    const selected = Math.max(1, Math.min(qty, available));
+    const added = await addToCart(product, selected);
+    if (added) {
+      navigate("/carrito");
     }
   };
 
@@ -286,13 +306,56 @@ const ProductDetail = () => {
             <p className="installments">Hasta 48 cuotas</p>
           </div>
 
+          <div className="stock-status">
+            {Number(product.stock ?? 0) > 0 ? (
+              <span>
+                Stock disponible: <strong>{product.stock}</strong> unidades
+              </span>
+            ) : (
+              <span className="stock-status-out">Sin existencias</span>
+            )}
+          </div>
+          {Number(product.stock ?? 0) > 0 && (
+            <p style={{ marginTop: 6, color: "#6c757d", fontSize: "0.9rem" }}>
+              Máximo por compra: <strong>{Number(product.stock)}</strong>
+            </p>
+          )}
+          {canManage && (
+            <p className="stock-status-out">
+              El carrito está deshabilitado para administradores y superadministradores.
+            </p>
+          )}
+
           <div className="shipping-options">
             <div className="option"><FaTruck className="icon" /><span>Envío <strong>GRATIS</strong></span></div>
             <div className="option"><FaStore className="icon" /><span>Recoge en tienda</span></div>
           </div>
 
           <div className="actions">
-            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+            {maxQty > 0 && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <label>
+                  Cantidad
+                  <select
+                    value={Math.min(qty, maxQty)}
+                    onChange={(e) => setQty(Number(e.target.value))}
+                    disabled={canManage}
+                    style={{ marginLeft: 8 }}
+                  >
+                    {Array.from({ length: Math.min(maxQty, 20) }, (_, i) => i + 1).map((n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
+            <button
+              className="add-to-cart-btn"
+              onClick={handleAddToCart}
+              disabled={Number(product.stock ?? 0) <= 0 || canManage}
+            >
               Agregar al carrito
             </button>
           </div>

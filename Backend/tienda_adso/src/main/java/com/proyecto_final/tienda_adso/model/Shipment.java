@@ -1,7 +1,11 @@
 package com.proyecto_final.tienda_adso.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "shipments")
@@ -14,6 +18,7 @@ public class Shipment {
 
     @OneToOne
     @JoinColumn(name = "order_id", unique = true, nullable = false)
+    @JsonIgnore
     private Order order;
 
     @Column(name = "direccion_envio")
@@ -37,6 +42,10 @@ public class Shipment {
 
     @Column(length = 100)
     private String tracking;
+
+    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("registradoEn ASC")
+    private List<ShipmentEvent> eventos = new ArrayList<>();
 
     public enum EstadoEnvio { LISTO, ENVIADO, ENTREGADO, DEVUELTO }
 
@@ -67,4 +76,15 @@ public class Shipment {
 
     public String getTracking() { return tracking; }
     public void setTracking(String tracking) { this.tracking = tracking; }
+
+    public List<ShipmentEvent> getEventos() { return eventos; }
+    public void setEventos(List<ShipmentEvent> eventos) { this.eventos = eventos; }
+
+    public void addEvento(ShipmentEvent evento) {
+        if (evento == null) {
+            return;
+        }
+        evento.setShipment(this);
+        this.eventos.add(evento);
+    }
 }

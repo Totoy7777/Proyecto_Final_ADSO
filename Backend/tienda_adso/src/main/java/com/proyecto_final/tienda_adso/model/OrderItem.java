@@ -1,5 +1,6 @@
 package com.proyecto_final.tienda_adso.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -11,6 +12,7 @@ public class OrderItem {
     private OrderItemId id = new OrderItemId();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @MapsId("orderId")
     @JoinColumn(name = "order_id")
     private Order order;

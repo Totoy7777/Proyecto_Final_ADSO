@@ -10,9 +10,6 @@ import "./Css/Menu.css";
 import "./Css/Submenu.css";
 
 // Componentes
-import CollegePromo from './components/CollegePromo';
-import ProductGrid from './components/ProductGrid';
-import CardSlider from './components/CardSlider';
 import Footer from "./components/Footer.jsx";
 
 import { CartProvider } from "./context/CartContext";
@@ -23,6 +20,7 @@ import ProductDetail from './components/ProductDetail';
 import Profile from "./pages/Profile";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
+import OrderTracking from "./pages/OrderTracking";
 
 function App() {
   return (
@@ -33,16 +31,7 @@ function App() {
             <Menu />
             <Routes>
           {/* Página principal */}
-              <Route
-            path="/"
-            element={
-              <>
-                <CollegePromo />
-                <ProductGrid />
-                <CardSlider />
-              </>
-            }
-          />
+              <Route path="/" element={<Home />} />
 
           {/* Otras páginas */}
               <Route path="/categoria/:categoria" element={<Categoria />} />
@@ -54,6 +43,7 @@ function App() {
               {/* 3. AGREGA LA RUTA PARA LA PÁGINA DEL CARRITO */}
               <Route path="/carrito" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/pedidos" element={<OrderTracking />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/admin/productos" element={<AdminProducts />} />
               <Route path="/admin/pedidos" element={<AdminOrders />} />

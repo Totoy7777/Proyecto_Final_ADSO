@@ -39,6 +39,9 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Shipment shipment;
 
+    @Column(name = "hidden_for_user")
+    private Boolean hiddenForUser;
+
     public enum OrderEstado { NUEVO, PAGADO, ENVIADO, CANCELADO }
 
     // Getters and Setters
@@ -68,4 +71,7 @@ public class Order {
 
     public Shipment getShipment() { return shipment; }
     public void setShipment(Shipment shipment) { this.shipment = shipment; }
+
+    public Boolean getHiddenForUser() { return hiddenForUser; }
+    public void setHiddenForUser(Boolean hiddenForUser) { this.hiddenForUser = hiddenForUser; }
 }

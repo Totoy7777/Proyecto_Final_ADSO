@@ -11,15 +11,13 @@ const Profile = () => {
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersFeedback, setUsersFeedback] = useState({ error: "", success: "" });
   const [actionLoadingId, setActionLoadingId] = useState(null);
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteState, setDeleteState] = useState({ loading: false, error: "", success: "" });
 
   useEffect(() => {
-    if (!isSuperAdmin || !authHeader) {
+    if (!isAuthenticated || !isSuperAdmin || !authHeader) {
       setManagedUsers([]);
-      return;
+      return undefined;
     }
 
     let isMounted = true;
@@ -66,7 +64,11 @@ const Profile = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [isSuperAdmin, authHeader]);
+  }, [isAuthenticated, isSuperAdmin, authHeader]);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   const handleToggleAdmin = async (targetUserId, currentAdmin) => {
     if (!authHeader) {
@@ -113,6 +115,58 @@ const Profile = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleDeleteRequest = () => {
+    setDeleteState({ loading: false, error: "", success: "" });
+    setShowDeleteConfirm(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteState({ loading: false, error: "", success: "" });
+    setShowDeleteConfirm(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!user?.id) {
+      setDeleteState({ loading: false, error: "No se encontró información del usuario.", success: "" });
+      return;
+    }
+
+    setDeleteState({ loading: true, error: "", success: "" });
+
+    try {
+      const response = await fetch(`${API_BASE}/users/${user.id}`, {
+        method: "DELETE",
+        headers: {
+          ...(authHeader ? { Authorization: authHeader } : {}),
+          ...NGROK_SKIP_HEADER,
+        },
+      });
+
+      const payload = response.status === 204
+        ? null
+        : await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(payload?.message || "No fue posible eliminar la cuenta.");
+      }
+
+      setDeleteState({
+        loading: false,
+        error: "",
+        success: payload?.message || "Cuenta eliminada correctamente.",
+      });
+      setShowDeleteConfirm(false);
+      logout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      setDeleteState({
+        loading: false,
+        error: error.message || "No fue posible eliminar la cuenta.",
+        success: "",
+      });
+    }
   };
 
   return (
@@ -233,21 +287,115 @@ const Profile = () => {
           </div>
         )}
 
-        <button
-          onClick={handleLogout}
+        <div
           style={{
             marginTop: "2rem",
-            padding: "0.75rem 1.5rem",
-            border: "none",
-            borderRadius: "8px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            fontWeight: 600,
-            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
           }}
         >
-          Cerrar sesión
-        </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{
+              padding: "0.75rem 1.5rem",
+              border: "none",
+              borderRadius: "8px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Cerrar sesión
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDeleteRequest}
+            disabled={deleteState.loading}
+            style={{
+              padding: "0.75rem 1.5rem",
+              borderRadius: "8px",
+              border: "1px solid #dc3545",
+              backgroundColor: "#fff",
+              color: deleteState.loading ? "#dc3545a0" : "#dc3545",
+              fontWeight: 600,
+              cursor: deleteState.loading ? "not-allowed" : "pointer",
+              opacity: deleteState.loading ? 0.8 : 1,
+            }}
+          >
+            Eliminar cuenta
+          </button>
+        </div>
+
+        {showDeleteConfirm && (
+          <div
+            style={{
+              marginTop: "1.5rem",
+              padding: "1.5rem",
+              borderRadius: "10px",
+              border: "1px solid #f5c2c7",
+              backgroundColor: "#fff5f5",
+            }}
+          >
+            <h2 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+              ¿Deseas eliminar tu cuenta?
+            </h2>
+            <p style={{ margin: "0 0 0.75rem 0", color: "#6c757d" }}>
+              Esta acción eliminará tu cuenta, los artículos de tu carrito y cualquier otro registro asociado. No se puede deshacer.
+            </p>
+            {deleteState.error && (
+              <div style={{ color: "#dc3545", marginBottom: "0.75rem" }}>{deleteState.error}</div>
+            )}
+            {deleteState.success && (
+              <div style={{ color: "#198754", marginBottom: "0.75rem" }}>{deleteState.success}</div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.75rem",
+              }}
+            >
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={deleteState.loading}
+                style={{
+                  padding: "0.65rem 1.25rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  fontWeight: 600,
+                  cursor: deleteState.loading ? "wait" : "pointer",
+                  opacity: deleteState.loading ? 0.8 : 1,
+                }}
+              >
+                {deleteState.loading ? "Eliminando..." : "Sí, eliminar"}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelDelete}
+                disabled={deleteState.loading}
+                style={{
+                  padding: "0.65rem 1.25rem",
+                  borderRadius: "8px",
+                  border: "1px solid #6c757d",
+                  backgroundColor: "#fff",
+                  color: "#6c757d",
+                  fontWeight: 600,
+                  cursor: deleteState.loading ? "not-allowed" : "pointer",
+                  opacity: deleteState.loading ? 0.8 : 1,
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

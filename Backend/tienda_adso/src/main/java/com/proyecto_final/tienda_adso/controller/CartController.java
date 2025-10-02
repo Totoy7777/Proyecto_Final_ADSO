@@ -77,11 +77,14 @@ public class CartController {
 
         Cart cart = cartService.getActiveCart(user).orElse(null);
         if (cart == null) return ResponseEntity.badRequest().body("No hay carrito activo");
-
-        CheckoutResponse response = orderService.checkoutFromCart(cart, request);
-        // crear nuevo carrito activo para compras futuras
-        cartService.createActiveCart(user);
-        return ResponseEntity.ok(response);
+        try {
+            CheckoutResponse response = orderService.checkoutFromCart(cart, request);
+            // crear nuevo carrito activo para compras futuras
+            cartService.createActiveCart(user);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     private User resolveUser(Integer userId) {

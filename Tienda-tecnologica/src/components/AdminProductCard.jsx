@@ -22,6 +22,10 @@ const AdminProductCard = ({ product, onEdit, onDelete }) => {
   }
 
   const image = product.imageUrl || product.image || fallbackImage;
+  const stock = Number(product.stock ?? 0);
+  const lowThreshold = 5;
+  const status = stock <= 0 ? "Agotado" : stock <= lowThreshold ? "Bajo" : "Alto";
+  const dotColor = stock <= 0 ? "#dc3545" : stock <= lowThreshold ? "#ffc107" : "#198754";
 
   return (
     <article
@@ -67,7 +71,34 @@ const AdminProductCard = ({ product, onEdit, onDelete }) => {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
           <span style={{ fontWeight: 600, color: "#198754" }}>{formatCurrency(product.price)}</span>
-          <span style={{ color: "#495057", fontSize: "0.9rem" }}>Stock: {product.stock ?? 0}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "#495057", fontSize: "0.9rem" }}>Stock: {stock}</span>
+            <span
+              title={`Nivel de stock: ${status}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "2px 8px",
+                borderRadius: 12,
+                background: "#f1f3f5",
+                fontSize: "0.8rem",
+                color: "#212529",
+                fontWeight: 600,
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: dotColor,
+                  display: "inline-block",
+                }}
+              />
+              {status}
+            </span>
+          </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.85rem" }}>
           <span>Categoría principal: {product.category?.parent?.name ?? product.parentCategory?.name ?? product.parentName ?? "-"}</span>

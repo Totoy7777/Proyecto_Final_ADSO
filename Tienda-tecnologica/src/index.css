@@ -5,3 +5,35 @@ body {
   background-color: #f5f6f8;
   color: #333;
 }
+
+/* Tema oscuro: invierte colores para descanso visual */
+html.dark, body.dark {
+  background-color: #0f0f10;
+  color: #eee;
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Revertir inversión en medios para que se vean normales */
+html.dark img,
+html.dark video,
+html.dark canvas,
+html.dark svg,
+html.dark .product-image,
+html.dark .product-slide-image {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Ajustes de contenedores comunes para el tema oscuro */
+html.dark .menu-container,
+html.dark .product-slide-card,
+html.dark .product-list .product-card,
+html.dark .footer-container {
+  background-color: #111;
+}
+
+html.dark .menu a,
+html.dark .theme-toggle,
+html.dark .product-slide-name,
+html.dark .product-slide-desc {
+  color: #e8e8e8;
+}

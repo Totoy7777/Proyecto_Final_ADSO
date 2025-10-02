@@ -1,0 +1,173 @@
+.order-tracking-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.order-tracking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-card {
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.order-card header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #d0d7de;
+  background: #f6f8fa;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-card header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.order-status-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #e9ecef;
+  color: #212529;
+}
+
+.order-status-badge.PAGADO,
+.order-status-badge.ENTREGADO {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.order-status-badge.ENVIADO {
+  background: #cff4fc;
+  color: #055160;
+}
+
+.order-status-badge.CANCELADO {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.order-card section {
+  padding: 16px 20px;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.order-items-table th,
+.order-items-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e9ecef;
+  text-align: left;
+}
+
+.order-items-table img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.order-timeline {
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 3px solid #0d6efd;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-timeline-step {
+  position: relative;
+  padding-left: 16px;
+}
+
+.order-timeline-step::before {
+  content: "";
+  position: absolute;
+  left: -21px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0d6efd;
+}
+
+.order-timeline-step h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #0d6efd;
+}
+
+.order-timeline-step p {
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.order-timeline-step.completed .order-timeline-icon {
+  color: #198754;
+}
+
+.order-timeline-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-timeline-icon {
+  color: #0d6efd;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.order-timeline-time {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.order-timeline-empty {
+  margin: 8px 0 0 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.order-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.summary-tile {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #d0d7de;
+}
+
+.summary-tile h3 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 680px) {
+  .order-items-table th:nth-child(3),
+  .order-items-table td:nth-child(3) {
+    display: none;
+  }
+}

@@ -76,11 +76,12 @@ public class ProductAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        if (productService.findById(id).isEmpty()) {
+        Optional<Product> productOptional = productService.findById(id);
+        if (productOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         try {
-            productService.delete(id);
+            productService.delete(productOptional.get());
             return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -95,7 +96,8 @@ public class ProductAdminController {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setStock(request.getStock());
+        Integer requestedStock = request.getStock();
+        product.setStock(requestedStock != null && requestedStock >= 0 ? requestedStock : 0);
         product.setImageUrl(request.getImageUrl());
         product.setCategory(category);
     }

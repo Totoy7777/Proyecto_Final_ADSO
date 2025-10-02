@@ -172,11 +172,16 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable int id) {
-        if (userService.findById(id).isEmpty()) {
-            return ResponseEntity.notFound().build(); // <-- Validación añadida
+    public ResponseEntity<SimpleResponse> delete(@PathVariable int id) {
+        try {
+            userService.deleteUserAndAssociations(id);
+            return ResponseEntity.ok(new SimpleResponse(true, "Usuario eliminado correctamente"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new SimpleResponse(false, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new SimpleResponse(false, "No fue posible eliminar el usuario"));
         }
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

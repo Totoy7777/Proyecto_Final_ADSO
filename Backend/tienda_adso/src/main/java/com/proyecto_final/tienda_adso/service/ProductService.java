@@ -18,6 +18,8 @@ public class ProductService {
     public Product save(Product p) { return productRepository.save(p); }
     public List<Product> findAll() { return productRepository.findAll(); }
     public Optional<Product> findById(int id) { return productRepository.findById(id); }
+    public void delete(Product product) { productRepository.delete(product); }
+
     public void delete(int id) { productRepository.deleteById(id); }
 
     public List<Product> findByCategory(Category category) {

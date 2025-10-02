@@ -1,5 +1,6 @@
 package com.proyecto_final.tienda_adso.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class Payment {
 
     @OneToOne
     @JoinColumn(name = "order_id", unique = true, nullable = false)
+    @JsonIgnore
     private Order order;
 
     @Column(name = "metodo_pago", length = 40)

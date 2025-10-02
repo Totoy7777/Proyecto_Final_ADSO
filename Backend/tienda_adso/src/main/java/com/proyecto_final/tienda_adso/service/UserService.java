@@ -1,8 +1,14 @@
 package com.proyecto_final.tienda_adso.service;
 
 import com.proyecto_final.tienda_adso.model.Administrator;
+import com.proyecto_final.tienda_adso.model.Cart;
+import com.proyecto_final.tienda_adso.model.Order;
+import com.proyecto_final.tienda_adso.model.Review;
 import com.proyecto_final.tienda_adso.model.User;
 import com.proyecto_final.tienda_adso.repository.AdministratorRepository;
+import com.proyecto_final.tienda_adso.repository.CartRepository;
+import com.proyecto_final.tienda_adso.repository.OrderRepository;
+import com.proyecto_final.tienda_adso.repository.ReviewRepository;
 import com.proyecto_final.tienda_adso.repository.SuperAdministratorRepository;
 import com.proyecto_final.tienda_adso.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,15 +26,24 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AdministratorRepository administratorRepository;
     private final SuperAdministratorRepository superAdministratorRepository;
+    private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
+    private final ReviewRepository reviewRepository;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AdministratorRepository administratorRepository,
-                       SuperAdministratorRepository superAdministratorRepository) {
+                       SuperAdministratorRepository superAdministratorRepository,
+                       CartRepository cartRepository,
+                       OrderRepository orderRepository,
+                       ReviewRepository reviewRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.administratorRepository = administratorRepository;
         this.superAdministratorRepository = superAdministratorRepository;
+        this.cartRepository = cartRepository;
+        this.orderRepository = orderRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public User save(User user) {
@@ -79,8 +94,44 @@ public class UserService {
         return userRepository.findByEmail(email.trim().toLowerCase());
     }
 
+    @Transactional
     public void delete(int id) {
-        userRepository.deleteById(id);
+        deleteUserAndAssociations(id);
+    }
+
+    @Transactional
+    public void deleteUserAndAssociations(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con ese id"));
+
+        administratorRepository.findByUser_UserId(userId)
+                .ifPresent(administratorRepository::delete);
+
+        superAdministratorRepository.findByUser_UserId(userId)
+                .ifPresent(superAdministratorRepository::delete);
+
+        List<Review> respondedReviews = reviewRepository.findByRespuestaAdminUser(user);
+        if (!respondedReviews.isEmpty()) {
+            respondedReviews.forEach(review -> review.setRespuestaAdminUser(null));
+            reviewRepository.saveAll(respondedReviews);
+        }
+
+        List<Review> authoredReviews = reviewRepository.findByUser(user);
+        if (!authoredReviews.isEmpty()) {
+            reviewRepository.deleteAll(authoredReviews);
+        }
+
+        List<Order> orders = orderRepository.findByUser(user);
+        if (!orders.isEmpty()) {
+            orderRepository.deleteAll(orders);
+        }
+
+        List<Cart> carts = cartRepository.findByUser(user);
+        if (!carts.isEmpty()) {
+            cartRepository.deleteAll(carts);
+        }
+
+        userRepository.delete(user);
     }
 
     public Optional<User> login(String email, String password) {
